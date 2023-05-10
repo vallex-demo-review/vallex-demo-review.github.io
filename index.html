@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="generator" content="Hugo 0.88.1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href=""https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
+	<link rel="stylesheet" href="css/custom.css">
+	<link rel="stylesheet" href="css/normalize.css">
+
+	<title>VALL-E X</title>
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body data-new-gr-c-s-check-loaded="14.1091.0" data-gr-ext-installed="">
+
+<div class="container" >
+<header role="banner">
+</header>
+<main role="main">
+<article itemscope itemtype="https://schema.org/BlogPosting">
+
+<div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded">
+	<div class="text-center">
+	<h1>VALL-E X</h1>
+        <h4>Speak Foreign Languages with Your Own Voice: Cross-Lingual Neural Codec Language Modeling</h4>
+		[<b>Anonymous</b>]
+		<p></p>
+		
+	</div>
+	<p>
+        <b>Abstract.</b> 
+		We propose a cross-lingual neural codec language model, VALL-E X, for cross-lingual speech synthesis. 
+		Specifically, we extend VALL-E and train a multi-lingual conditional codec language model to predict the acoustic token sequences of the target language speech by using both the source language speech and the target language text as prompts. 
+		VALL-E X inherits strong in-context learning capabilities and can be applied for zero-shot cross-lingual text-to-speech synthesis and  zero-shot speech-to-speech translation tasks. 
+		Experimental results show that it can generate high-quality speech in the target language via just one speech utterance in the source language as a prompt while preserving the unseen speaker's voice, emotion, and acoustic environment. Moreover, VALL-E X effectively alleviates the foreign accent problems, which can be controlled by a language ID.
+      </p>     
+	  <p>This page is for <b>research demonstration purposes</b> only.</p>
+
+	<p>
+	<b>Contents</b>
+      <ul>
+        <li><a href="#model-overview">Model Overview</a></li>
+        <li><a href="#xtts-samples">Zero-Shot Cross-Lingual Text to Speech</a></li>
+        <li><a href="#s2st-samples">Zero-Shot Speech-to-Speech Translation</a></li>
+        <li><a href="#lid-samples">Foreign Accent Control</a></li>
+        <li><a href="#emotion-samples">Voice Emotion Maintenance</a></li>
+		<li><a href="#codeswitch-samples">Code-Switch Speech Synthesis</a></li>
+        <!-- <li><a href="#more-samples">More Examples</a></li> -->
+        <li><a href="#Ethics-Statement">Ethics Statement</a></li>
+      </ul>
+	</p>   
+
+	
+</div>
+
+
+<div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded">		
+	<h2 id="model-overview" style="text-align: center;">Model Overview</h2>
+	<body>
+	<p style="text-align: center;">
+		<img src="pics/vallex_framework.jpg" height="400" width="800">
+	</p>
+	</body>
+		<p>
+			<b>Figure.</b> 
+			The overall framework of VALL-E X, which can synthesize personalized speech in another language for a monolingual speaker. Taking the phoneme sequences derived from the source and target text, and the source acoustic tokens derived from an audio codec model as prompts, VALL-E X is able to produce the acoustic tokens in the target language, which can be then decompressed to the target speech waveform. Thanks to its powerful in-context learning capabilities, VALL-E X does not require cross-lingual speech data of the same speakers for training, and can perform various zero-shot cross-lingual speech generation tasks, such as cross-lingual text-to-speech synthesis and speech-to-speech translation.
+		</p>
+</div>
+
+<div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded">
+	<h2 id="xtts-samples" style="text-align: center;">Zero-Shot Cross-Lingual Text to Speech</h2>
+
+		<div class="table-responsive pt-3">
+			<p>
+			<b>1) English TTS with Chinese prompts </b> (English samples are from LibriSpeech, Chinese samples are from EMIME and AISHELL-3 dataset).
+			</p>
+			<table class="table table-hover pt-2">
+				<thead>
+				<tr>
+				<th style="text-align: center">English Text</th>
+				<th style="text-align: center">Chinese Speaker Prompt</th>
+				<th style="text-align: center">Baseline</th>
+				<th style="text-align: center">VALL-E X</th>
+				</tr>
+				</thead>
+				<tbody>
+					<tr><td style="text-align: left;vertical-align:middle;width: 600px">Look a little closer while our guide lets the light of his lamp fall upon the black wall at your side.</td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/aishell2libri_518_ch_prompts.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/aishell2libri_518_en_baseline.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/aishell2libri_518_en_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+						</tr>				
+						</tr>
+						<tr><td style="text-align: left;vertical-align:middle;width: 600px">He honours whatever he recognizes in himself, such morality equals self-glorification.</td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/emime2libri_729_ch_prompts.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/emime2libri_729_en_baseline.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/emime2libri_729_en_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+						</tr>
+						<tr><td style="text-align: left;vertical-align:middle;width: 600px">One dark night at the head of a score of his tribe, he fell upon Wabigoon's camp, his object being the abduction of the princess.</td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/emime2libri_905_ch_prompts.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/emime2libri_905_en_baseline.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/emime2libri_905_en_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+						</tr>
+						<tr><td style="text-align: left;vertical-align:middle;width: 600px">There could be little art in this last and final round of fencing.</td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/aishell2libri_34_ch_prompts.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/aishell2libri_34_en_baseline.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/aishell2libri_34_en_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+						</tr>
+						<tr><td style="text-align: left;vertical-align:middle;width: 600px">It's the first time Hilda has been to our house and Tom introduces her around.</td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/aishell2libri_205_ch_prompts.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/aishell2libri_205_en_baseline.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/aishell2libri_205_en_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+						</tr>
+						</tr>
+						<tr><td style="text-align: left;vertical-align:middle;width: 600px">It was youth and poverty and proximity and everything was young and kindly.</td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/emime2libri_60_ch_prompts.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/emime2libri_60_en_baseline.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/emime2libri_60_en_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+						</tr>	
+				</tbody>
+			</table>
+			<br>
+			<p>
+			<b>2) Chinese TTS with English prompts </b> (Chinese samples are from EMIME and AISHELL-3 test, English samples are from LibriSpeech).
+			</p>	
+			<table class="table table-hover pt-2">
+			
+			<thead>
+			<tr>
+			<th style="text-align: center">Chinese Text</th>
+			<th style="text-align: center">English Speaker Prompt</th>
+			<th style="text-align: center">VALL-E X</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr><td style="text-align: left;vertical-align:middle;width: 500px">坚持房地产调控政策不动摇。</td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/ref_output_238_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/output_238_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			</tr>
+			<tr><td style="text-align: left;vertical-align:middle;width: 500px">值得关注的是从二零一零年到二零一四年。</td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/ref_output_576_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/output_576_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			</tr>
+			<tr><td style="text-align: left;vertical-align:middle;width: 500px">两千六百四十八万二千五百四十六。</td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/ref_output_590_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/output_590_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			</tr>
+			<tr><td style="text-align: left;vertical-align:middle;width: 500px">汇聚部分全球领先品牌的下一代技术创新。</td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/ref_output_591_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/output_591_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			</tr>
+			<tr><td style="text-align: left;vertical-align:middle;width: 500px">商品房销售情况也传递出了更多暖意。</td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/ref_output_610_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/output_610_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			</tr>
+			<tr><td style="text-align: left;vertical-align:middle;width: 500px">最低首付款比例为百分之一。</td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/ref_output_1243_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/output_1243_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			</tr>
+			</tbody>
+			</table>
+		</div>
+</div>
+
+<div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded">
+	<h2 id="s2st-samples" style="text-align: center;">Zero-Shot Speech-to-Speech Translation</h2>
+
+		<div class="table-responsive pt-3">
+			<p>
+			<b>1) Chinese to English Translation on EMIME dataset.</b>
+			</p>
+			<table class="table table-hover pt-2">
+			<thead>
+			<tr>
+				<th style="text-align: center">Chinese Speech</th>
+				<th style="text-align: center">English Ground Truth</th>
+				<th style="text-align: center">Baseline</th>
+				<th style="text-align: center">VALL-E X Trans</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/source/zh_50.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/target/en_50.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/baseline/baseline_50.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/ours/vallex_50.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			</tr>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/source/zh_135.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/target/en_135.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/baseline/baseline_135.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/ours/vallex_135.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			</tr>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/source/zh_234.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/target/en_234.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/baseline/baseline_234.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/ours/vallex_234.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			</tr>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/source/zh_150.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/target/en_150.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/baseline/baseline_150.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/ours/vallex_150.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			</tr>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/source/zh_168.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/target/en_168.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/baseline/baseline_168.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/ours/vallex_168.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			</tr>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/source/zh_9.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/target/en_9.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/baseline/baseline_9.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/ours/vallex_9.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			</tr>
+			</tbody>
+			</table>
+			<br>
+			<p>
+			<b>2) English to Chinese Translation on EMIME dataset.</b>
+			</p>
+			<table class="table table-hover pt-2">
+			<thead>
+			<tr>
+				<th style="text-align: center">English Speech</th>
+				<th style="text-align: center">Chinese Ground Truth</th>
+				<th style="text-align: center">VALL-E X Trans</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/source/en_204.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/target/zh_204.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/ours/vallex_204.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			</tr>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/source/en_98.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/target/zh_98.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/ours/vallex_98.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			</tr>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/source/en_137.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/target/zh_137.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/ours/vallex_137.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			</tr>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/source/en_209.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/target/zh_209.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/ours/vallex_209.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			</tr>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/source/en_148.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/target/zh_148.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/ours/vallex_148.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			</tr>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/source/en_168.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/target/zh_168.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/ours/vallex_168.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			</tr>
+			</tbody>
+			</table>
+			<br>
+			<p>
+			<b>3) Chinese to English Translation using AISHELL-3 test.</b>
+			</p>
+			<table class="table table-hover pt-2">
+				<thead>
+				<tr>
+				<th style="text-align: center">Chinese Text</th>
+				<th style="text-align: center">Chinese Speech</th>
+				<th style="text-align: center">Baseline</th>
+				<th style="text-align: center">VALL-E X Trans </th>
+				</tr>
+				</thead>
+				<tbody>
+					<tr><td style="text-align: left;vertical-align:middle;width: 500px">我们就坐在他的位于半山坡的办公室里。</td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/source/output_103_reference.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/baseline/SSB07170458.104.yourtts.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/ours/aishell_zh2en_103_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+					</tr>
+						<tr><td style="text-align: left;vertical-align:middle;width: 500px">是巴西女选手在热身泳道中违规使用脚扑影响他人。</td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/source/output_140_reference.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/baseline/SSB17450167.141.yourtts.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/ours/aishell_zh2en_140_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+					</tr>
+						<tr><td style="text-align: left;vertical-align:middle;width: 500px">更在于这项运动本身具有着极其丰富的精神内涵。</td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/source/output_151_reference.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/baseline/SSB08870390.152.yourtts.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/ours/aishell_zh2en_151_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+					</tr>
+						<tr><td style="text-align: left;vertical-align:middle;width: 500px">美国并没有统一的全国高中联赛。</td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/source/output_3_reference.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/baseline/SSB06930182.4.yourtts.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/ours/aishell_zh2en_3_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+						</tr>
+						<tr><td style="text-align: left;vertical-align:middle;width: 500px">本市还要打造慈善捐赠事业的阳光工程。</td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/source/output_12_reference.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/baseline/SSB11870416.13.yourtts.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/ours/aishell_zh2en_12_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+					</tr>
+						<tr><td style="text-align: left;vertical-align:middle;width: 500px">达茜兮会称呼我为瓦齐里先生。</td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/source/output_59_reference.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/baseline/SSB07170279.60.yourtts.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+						<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/ours/aishell_zh2en_59_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+					</tr>
+				</tbody>
+
+			</table>
+			<br>
+			<p>
+			<b>4) English to Chinese Translation using LibriSpeech dev-clean.</b>
+			</p>
+			<table class="table table-hover pt-2">
+			<thead>
+			<tr>
+			<th style="text-align: center">English Text</th>
+			<th style="text-align: center">English Speech</th>
+			<th style="text-align: center">VALL-E X Trans</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr><td style="text-align: left;vertical-align:middle;width: 600px">His instant of panic was followed by a small sharp blow high on his chest.</td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-libridev-enzh/output_22_reference.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-libridev-enzh/output_22_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			</tr>
+			<tr><td style="text-align: left;vertical-align:middle;width: 600px">The last two days of the voyage Bartley found almost intolerable.</td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-libridev-enzh/output_61_reference.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-libridev-enzh/output_61_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			</tr>
+			<tr><td style="text-align: left;vertical-align:middle;width: 600px">She merely brushed his cheek with her lips and put a hand lightly and joyously on either shoulder.</td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-libridev-enzh/output_65_reference.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-libridev-enzh/output_65_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			</tr>
+			<tr><td style="text-align: left;vertical-align:middle;width: 600px">But in this awful moment of the danger of the church. their vow was superseded by a more sublime and indispensable duty.</td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-libridev-enzh/output_105_reference.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-libridev-enzh/output_105_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			</tr>
+			<tr><td style="text-align: left;vertical-align:middle;width: 600px">We've lost the key of the cellar and there's nothing out except water and i don't think you'd care for that.</td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-libridev-enzh/output_425_reference.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-libridev-enzh/output_425_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			</tr>
+			<tr><td style="text-align: left;vertical-align:middle;width: 600px">He had been late he had offered no excuse no explanation.</td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-libridev-enzh/output_1058_reference.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-libridev-enzh/output_1058_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			</tr>
+
+			</tbody>
+			</table>
+		</div>
+</div>
+
+<div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded">
+	<h2 id="lid-samples" style="text-align: center;">Foreign Accent Control</h2>
+		<div class="table-responsive pt-3">
+			<p>
+			<b>1) English to Chinese on EMIME dataset. </b>
+			</p>
+			<table class="table table-hover pt-2">
+			<thead>
+			<tr>
+				<th style="text-align: center">English Speech (Prompt)</th>
+				<th style="text-align: center">Chinese Speech (Ground Truth)</th>
+				<th style="text-align: center">VALL-E X with English LID</th>
+				<th style="text-align: center">VALL-E X with Chinese LID</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/enzh/emime_en_43_truth.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/enzh/emime_zh_43_truth.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/enzh/emime_en2zh_43_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/enzh/emime_en2zh_43_ar01lid1.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			</tr>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/enzh/MF1_ENG_0002_1.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/enzh/MF1_MAN_0002_1.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/enzh/output_with_EN_LID_MF1_ENG_0002_1.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/enzh/output_with_ZH_LID_MF1_ENG_0002_1.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			</tr>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/enzh/emime_en_252_truth.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/enzh/emime_zh_252_truth.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/enzh/emime_en2zh_252_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/enzh/emime_en2zh_252_ar01lid1.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			</tr>
+
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/enzh/emime_en_266_truth.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/enzh/emime_zh_266_truth.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/enzh/emime_en2zh_266_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/enzh/emime_en2zh_266_ar01lid1.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			</tr>
+
+			</tbody>
+			</table>
+			<br>
+			<p>
+			<b>2) Chinese to English on EMIME dataset. </b>
+			</p>
+			<table class="table table-hover pt-2">
+			<thead>
+			<tr>
+				<th style="text-align: center">Chinese Speech (Prompt)</th>
+				<th style="text-align: center">English Speech (Ground Truth)</th>
+				<th style="text-align: center">VALL-E X with English LID</th>
+				<th style="text-align: center">VALL-E X with Chinese LID</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/zhen/emime_zh2en_236_truth_zh.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/zhen/emime_zh2en_236_truth_en.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/zhen/emime_zh2en_236_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/zhen/emime_zh2en_236_ar01lid1.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			</tr>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/zhen/emime_zh2en_155_truth_zh.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/zhen/emime_zh2en_155_truth_en.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/zhen/emime_zh2en_155_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/zhen/emime_zh2en_155_ar01lid1.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			</tr>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/zhen/emime_zh2en_123_truth_zh.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/zhen/emime_zh2en_123_truth_en.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/zhen/emime_zh2en_123_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/zhen/emime_zh2en_123_ar01lid1.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			</tr>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/zhen/emime_zh2en_262_truth_zh.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/zhen/emime_zh2en_262_truth_en.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/zhen/emime_zh2en_262_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/zhen/emime_zh2en_262_ar01lid1.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+			</tr>
+
+			</tbody>
+			</table>
+		</div>
+</div>
+
+<div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded">		
+	<h2 id="emotion-samples" style="text-align: center;"> Voice Emotion Maintenance </h2>
+		<p> 
+		VALL-E X Trans can synthesize personalized target speech while maintaining the emotion in the source speech. The source audio are sampled from the Emotional Voices Database EmoV-DB.
+		</p>
+	<div class="table-responsive pt-3">
+		<table class="table table-hover pt-2">
+		<thead>
+		<tr>
+		<th style="text-align: center">Emotion</th>
+		<th style="text-align: center">English Speech</th>
+		<th style="text-align: center">VALL-E X Trans</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+		<td style="text-align: center;vertical-align:middle;width: 500px">Neutral</td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/emotion/output_4162_neutral_85-112_0097.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/emotion/output_4162_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+		</tr>
+		<tr>
+		<td style="text-align: center;vertical-align:middle;width: 500px">Amused</td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/emotion/output_3872_amused_85-112_0110.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/emotion/output_3872_28_2_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+		</tr>
+		<tr>
+		<td style="text-align: center;vertical-align:middle;width: 500px">Sleepiness</td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/emotion/output_1455_sleepiness_253-280_0253.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/emotion/output_1455_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+		</tr>
+		<tr>
+		<td style="text-align: center;vertical-align:middle;width: 500px">Anger</td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/emotion/output_5249_anger_367-392_0368.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/emotion/output_5249_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+		</tr>
+		<tr>
+		<td style="text-align: center;vertical-align:middle;width: 500px">Disgust</td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/emotion/output_5712_disgust_336-364_0364.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/emotion/output_5712_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+		</tr>
+		</tbody>
+		</table>	
+	</div>
+</div>
+
+<div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded">		
+	<h2 id="codeswitch-samples" style="text-align: center;"> Code-Switch Speech Synthesis </h2>
+	<div class="table-responsive pt-3">
+		<table class="table table-hover pt-2">
+		<thead>
+		<tr>
+		<th style="text-align: center">Code-Switch Text</th>
+		<th style="text-align: center">Prompts</th>
+		<th style="text-align: center">VALL-E X</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+		<td style="text-align: center;vertical-align:middle;width: 500px">播放歌曲 BEST FRIEND。</td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/codeswitch/12_MF3_MAN_0010_0.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/codeswitch/output_12_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+		</tr>
+		<tr>
+		<td style="text-align: center;vertical-align:middle;width: 500px">我想去travel一下，放松一下自己。</td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/codeswitch/25_MM5_MAN_0003_0.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/codeswitch/output_25_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+		</tr>
+		<tr>
+		<td style="text-align: center;vertical-align:middle;width: 500px">他是一个funny的人，总是讲笑话。</td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/codeswitch/26_MM5_MAN_0024_0.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/codeswitch/output_26_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+		</tr>
+		<tr>
+		<td style="text-align: center;vertical-align:middle;width: 500px">这个restaurant很有名，很多人都来吃。</td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/codeswitch/17_MM1_MAN_0003_0.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/codeswitch/output_17_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+		</tr>
+		<tr>
+		<td style="text-align: center;vertical-align:middle;width: 500px">这个pizza很好吃，你要不要try一下。</td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/codeswitch/32_MM7_MAN_0019_0.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/codeswitch/output_32_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio></td>
+		</tr>
+		</tbody>
+		</table>	
+	</div>
+</div>
+
+
+<div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded">		
+	<h2 id="Ethics-Statement" style="text-align: center;">Ethics Statement</h2>
+	<p>
+	Since VALL-E X could synthesize speech that maintains speaker identity, it may carry potential risks in misuse of the model, such as spoofing voice identification or impersonating a specific speaker. We conducted the experiments under the assumption that the user agree to be the target speaker in speech synthesis. If the model is generalized to unseen speakers in the real world, it should include a protocol to ensure that the speaker approves the use of their voice and a synthesized speech detection model.
+	</p>
+</div>
+ 
+</article>
+</main>
+</div>
+
+</body>
+</html>
